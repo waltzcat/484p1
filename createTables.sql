@@ -10,9 +10,9 @@ create table users (user_id number,
 create table friends (user1_id number,
                       user2_id number,
                       primary key (user1_id, user2_id),
-                      foreign key (user1_id) references users
+                      foreign key (user1_id) references users(user_id)
                       on delete cascade,
-                      foreign key (user2_id) references users
+                      foreign key (user2_id) references users(user_id)
                       on delete cascade);
 
 -- If A and B are friends with each other, and A quits fakebook because he believes it sucks, then A and B should no longer be defined as friends in fakebook.
@@ -29,7 +29,7 @@ create table user_current_city (user_id number,
                                 primary key (user_id, current_city_id),
                                 foreign key (user_id) references users
                                 on delete cascade,
-                                foreign key (current_city_id) references cities
+                                foreign key (current_city_id) references cities(city_id)
                                 on delete cascade);
 
 -- 
@@ -39,7 +39,7 @@ create table user_hometown_city (user_id number,
                                  primary key (user_id, hometown_city_id),
                                  foreign key (user_id) references users
                                  on delete cascade,
-                                 foreign key (hometown_city_id) references cities
+                                 foreign key (hometown_city_id) references cities(city_id)
                                  on delete cascade);
                                  --on update cascade);
 
@@ -49,13 +49,13 @@ create table message (message_id integer,
                       message_content varchar2(2000),
                       sent_time timestamp not null,
                       primary key (message_id),
-                      foreign key (sender_id) references users
+                      foreign key (sender_id) references users(user_id)
                       on delete cascade,
-                      foreign key (receiver_id) references users
+                      foreign key (receiver_id) references users(user_id)
                       on delete cascade);
 
 create table programs (program_id integer,
-                       institiution varchar2(100),
+                       institution varchar2(100),
                        concentration varchar2(100),
                        degree varchar2(100),
                        primary key (program_id));
@@ -75,15 +75,15 @@ create table user_events (event_id number,
                           event_name varchar2(100) not null,
                           event_tagline varchar2(100),
                           event_description varchar2(100),
-                          event_host varchar2(100),
-                          event_type varchar2(100),
-                          event_subtype varchar2(100),
+                          event_host varchar2(100) not null,
+                          event_type varchar2(100) not null,
+                          event_subtype varchar2(100) not null,
                           event_location varchar2(100),
                           event_city_id integer,
                           event_start_time timestamp not null,
                           event_end_time timestamp not null,
                           primary key (event_id),
-                          foreign key (event_creator_id) references users
+                          foreign key (event_creator_id) references users(user_id)
                           on delete cascade);
 
 create table participants (event_id number,
@@ -97,13 +97,13 @@ create table participants (event_id number,
                            on delete cascade);
 
 create table albums (album_id varchar2(100),
-                     album_owner_id number,
+                     album_owner_id number not null,
                      album_name varchar2(100) not null,
                      album_created_time timestamp not null,
                      album_modified_time timestamp not null,
                      album_link varchar2(2000) not null,
-                     album_visibility varchar2(100),
-                     cover_photo_id varchar2(100),
+                     album_visibility varchar2(100) not null,
+                     cover_photo_id varchar2(100) not null,
                      primary key (album_id),
                      foreign key (album_owner_id) references users
                      on delete cascade);
@@ -120,14 +120,14 @@ alter table albums add foreign key (cover_photo_id) references photos initially 
 alter table photos add foreign key (album_id) references albums initially deferred deferrable;
 
 create table tags (tag_photo_id varchar2(100),
-                   tag_subject_id number,
+                   tag_subject_id number not null,
                    tag_created_time timestamp not null,
                    tag_x number not null,
                    tag_y number not null,
                    primary key (tag_photo_id,tag_subject_id),
-                   foreign key (tag_photo_id) references photos
+                   foreign key (tag_photo_id) references photos(photo_id)
                    on delete cascade,
-                   foreign key (tag_subject_id) references users
+                   foreign key (tag_subject_id) references users(user_id)
                    on delete cascade);
 
                      
