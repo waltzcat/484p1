@@ -1,7 +1,7 @@
-CREATE VIEW VIEW_USER_INFORMATION AS
+CREATE VIEW VIEW_USER_INFORMATION AS 
 SELECT u.user_id , u.first_name, u.last_name,u.year_of_birth,u.month_of_birth,u.day_of_birth,u.gender,
-cc.city_name, cc.state_name, cc.country_name,
-hc.city_name, hc.state_name, hc.country_name,
+cc.city_name as current_city, cc.state_name as current_state, cc.country_name as current_country,
+hc.city_name as hometown_city, hc.state_name as hometown_state, hc.country_name as hometown_country,
 pg.institution, e.program_year,pg.concentration,pg.degree
 FROM users u
 LEFT JOIN user_current_city ucc ON u.user_id = ucc.user_id
@@ -10,7 +10,7 @@ LEFT JOIN user_hometown_city uhc ON u.user_id = uhc.user_id
 INNER JOIN cities hc ON uhc.hometown_city_id = hc.city_id
 LEFT JOIN education e ON u.user_id = e.user_id
 INNER JOIN programs pg ON e.program_id = pg.program_id ;
-
+--(user_id,first_name,last_name,year_of_birth,month_of_birth,day_of_birth,gender,current_city,current_state,current_city,current_country,hometown_city,hometown_state,hometown_country,institution_name,program_year,program_concentration,program_degree) 
 
 CREATE VIEW VIEW_ARE_FRIENDS AS
 SELECT f.user1_id, f.user2_id
