@@ -11,3 +11,6 @@ drop table albums cascade constraints;
 drop table photos cascade constraints;
 drop table users;
 drop table cities;
+
+drop sequence seq_cities;
+drop sequence seq_prog;

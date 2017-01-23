@@ -130,6 +130,59 @@ create table tags (tag_photo_id varchar2(100),
                    foreign key (tag_subject_id) references users(user_id)
                    on delete cascade);
 
-                     
+-- Sequence for auto_increment 
+create sequence seq_cities
+start with 1
+increment by 1;
 
+create sequence seq_prog
+start with 1
+increment by 1;
 
+-- Auto_increment Trigger for city 
+create or replace trigger city_trigger
+before insert on cities
+for each row
+begin
+  :new.city_id := seq_cities.nextval;
+--  select seq_data.nextval into :new.city_id from dual;
+end;
+/
+
+-- Auto_increment Trigger for prog
+create or replace trigger prog_trigger
+before insert on programs
+for each row
+begin
+  :new.program_id := seq_prog.nextval;
+--  select seq_data.nextval into :new.city_id from dual;
+end;
+/
+
+-- Trigger for friends
+create or replace trigger fri_trigger 
+before insert on friends
+for each row when (new.user1_id >= new.user2_id)
+begin
+:new.user1_ID := :new.user2_id + :new.user1_id;
+:new.user2_ID := :new.user1_id - :new.user2_id;
+:new.user1_ID := :new.user1_id + :new.user2_id;
+end;
+/                    
+
+/*
+-- Trigger for album_visibility
+create or replace trigger alb_vis
+before insert on albums
+for each row 
+when (new.album_visibility = 'EVERYONE' 
+      or new.album_visibility = 'FRIENDS_OF_FRIENDS'
+      or new.album_visibility = 'FRIENDS'
+      or new.album_visibility = 'MYSELF'
+      or new.album_visibility = 'CUSTOM')
+begin
+insert into albums(album_id,album_owner_id,album_name,album_link,album_visibility,cover_photo_id) 
+  values(:new.album_id,:new.album_owner_id,:new.album_name,:new.album_link,:new.album_visibility,:new.cover_photo_id);
+end;
+/
+*/

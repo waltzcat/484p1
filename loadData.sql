@@ -1,45 +1,5 @@
 -- Part 3 Database loading
 
--- Sequence for auto_increment 
-create sequence seq_cities
-start with 1
-increment by 1;
-
-create sequence seq_prog
-start with 1
-increment by 1;
-
--- Auto_increment Trigger for city 
-create or replace trigger city_trigger
-before insert on cities
-for each row
-begin
-  :new.city_id := seq_cities.nextval;
---  select seq_data.nextval into :new.city_id from dual;
-end;
-/
-
--- Auto_increment Trigger for prog
-create or replace trigger prog_trigger
-before insert on programs
-for each row
-begin
-  :new.program_id := seq_prog.nextval;
---  select seq_data.nextval into :new.city_id from dual;
-end;
-/
-
--- Trigger for friends
-create or replace trigger fri_trigger 
-before insert on friends
-for each row when (new.user1_id >= new.user2_id)
-begin
-:new.user1_ID := :new.user2_id + :new.user1_id;
-:new.user2_ID := :new.user1_id - :new.user2_id;
-:new.user1_ID := :new.user1_id + :new.user2_id;
-end;
-/
-
 -- User data loading
 insert into users (user_id, first_name, last_name, year_of_birth, month_of_birth, day_of_birth, gender) 
 select distinct user_id, first_name, last_name, year_of_birth, month_of_birth, day_of_birth, gender from weile.public_user_information;
@@ -56,7 +16,6 @@ select distinct current_city, current_state, current_country from weile.public_u
 union
 select distinct event_city, event_state, event_country from weile.public_event_information;
 
-drop sequence seq_cities;
 
 -- current_city loading
 insert into user_current_city (user_id, current_city_id)
@@ -77,8 +36,6 @@ and cities.country_name = pubData.hometown_country;
 -- Programs loading
 insert into programs (institution, concentration, degree)
 select distinct institution_name, program_concentration, program_degree from weile.public_user_information; 
-
-drop sequence seq_prog;
 
 -- Education loading
 insert into education (user_id, program_id, program_year)
