@@ -1,3 +1,7 @@
+@dropTables.sql;
+@createTables.sql;
+@loadData.sql;
+
 SELECT * FROM weile.PUBLIC_USER_INFORMATION
 MINUS
 SELECT * FROM VIEW_USER_INFORMATION;
