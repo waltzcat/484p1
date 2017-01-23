@@ -46,11 +46,19 @@ and prog.concentration = pubData.program_concentration
 and prog.degree = pubData.program_degree;
 
 -- Events data loading
+/* OLD VERSION
 insert into user_events (event_id, event_creator_id, event_name, event_tagline, event_description, event_host, event_type, event_subtype, event_location, event_city_id, event_start_time, event_end_time) 
 select distinct event_id, event_creator_id, event_name, event_tagline, event_description, event_host, event_type, event_subtype, event_location, cities.city_id, event_start_time, event_end_time from weile.public_event_information pubEvent, cities
 where  pubEvent.event_city = cities.city_name
 and pubEvent.event_state = cities.state_name
 and pubEvent.event_country = cities.country_name;
+*/
+insert into user_events (event_id, event_creator_id, event_name, event_tagline, event_description, event_host, event_type, event_subtype, event_location, event_city_id, event_start_time, event_end_time) 
+select distinct event_id, event_creator_id, event_name, event_tagline, event_description, event_host, event_type, event_subtype, event_location, cities.city_id, event_start_time, event_end_time 
+FROM weile.public_event_information pubEvent 
+LEFT JOIN  cities ON pubEvent.event_city = cities.city_name
+LEFT JOIN  cities ON pubEvent.event_state = cities.state_name
+LEFT JOIN  cities ON pubEvent.event_country = cities.country_name;
 
 -- album data loading
 set autocommit off

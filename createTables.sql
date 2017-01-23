@@ -106,7 +106,12 @@ create table albums (album_id varchar2(100),
                      cover_photo_id varchar2(100) not null,
                      primary key (album_id),
                      foreign key (album_owner_id) references users
-                     on delete cascade);
+                     on delete cascade
+                     check (album_visibility = 'EVERYONE' 
+                      OR album_visibility = 'FRIENDS_OF_FRIENDS'
+                      OR album_visibility = 'FRIENDS'
+                      OR album_visibility = 'MYSELF'
+                      OR album_visibility = 'CUSTOM'));
 
 create table photos (photo_id varchar2(100),
                      album_id varchar2(100) not null,
