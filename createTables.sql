@@ -25,9 +25,9 @@ create table cities (city_id integer,
                      primary key (city_id));
 
 create table user_current_city (user_id number,
-                                current_city_id integer,
+                                current_city_id integer not null,
                                 primary key (user_id, current_city_id),
-                                foreign key (user_id) references users
+                                foreign key (user_id) references users (user_id)
                                 on delete cascade,
                                 foreign key (current_city_id) references cities(city_id)
                                 on delete cascade);
@@ -35,9 +35,9 @@ create table user_current_city (user_id number,
 -- 
 
 create table user_hometown_city (user_id number,
-                                 hometown_city_id integer,
+                                 hometown_city_id integer not null,
                                  primary key (user_id, hometown_city_id),
-                                 foreign key (user_id) references users
+                                 foreign key (user_id) references users (user_id)
                                  on delete cascade,
                                  foreign key (hometown_city_id) references cities(city_id)
                                  on delete cascade);
@@ -55,9 +55,9 @@ create table message (message_id integer,
                       on delete cascade);
 
 create table programs (program_id integer,
-                       institution varchar2(100),
-                       concentration varchar2(100),
-                       degree varchar2(100),
+                       institution varchar2(100) not null,
+                       concentration varchar2(100) not null,
+                       degree varchar2(100) not null,
                        primary key (program_id));
 
 create table education (user_id number,
@@ -84,16 +84,18 @@ create table user_events (event_id number,
                           event_end_time timestamp not null,
                           primary key (event_id),
                           foreign key (event_creator_id) references users(user_id)
+                          on delete cascade,
+                          foreign key (event_city_id) references cities(city_id)
                           on delete cascade);
 
 create table participants (event_id number,
                            user_id number,
                            confirmation varchar2(100) not null,
                            primary key (event_id,user_id),
-                           foreign key (event_id) references user_events
+                           foreign key (event_id) references user_events (event_id)
                            on delete cascade,
 --                           on update cascade,
-                           foreign key (user_id) references users
+                           foreign key (user_id) references users (user_id)
                            on delete cascade,
                            check (confirmation = 'ATTENDING'
                            OR confirmation = 'DECLINED' 
@@ -175,7 +177,7 @@ for each row when (new.user1_id >= new.user2_id)
 begin
 :new.user1_ID := :new.user2_id + :new.user1_id;
 :new.user2_ID := :new.user1_id - :new.user2_id;
-:new.user1_ID := :new.user1_id + :new.user2_id;
+:new.user1_ID := :new.user1_id - :new.user2_id;
 end;
 /                    
 

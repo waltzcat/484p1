@@ -35,7 +35,10 @@ and cities.country_name = pubData.hometown_country;
 
 -- Programs loading
 insert into programs (institution, concentration, degree)
-select distinct institution_name, program_concentration, program_degree from weile.public_user_information; 
+select distinct institution_name, program_concentration, program_degree from weile.public_user_information 
+where institution_name is not null
+and program_concentration is not null
+and program_degree is not null;
 
 -- Education loading
 insert into education (user_id, program_id, program_year)
