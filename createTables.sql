@@ -94,7 +94,11 @@ create table participants (event_id number,
                            on delete cascade,
 --                           on update cascade,
                            foreign key (user_id) references users
-                           on delete cascade);
+                           on delete cascade,
+                           check (confirmation = 'ATTENDING'
+                           OR confirmation = 'DECLINED' 
+                           OR confirmation = 'UNSURE' 
+                           OR confirmation = 'NOT-REPLIED'));
 
 create table albums (album_id varchar2(100),
                      album_owner_id number not null,
@@ -106,7 +110,7 @@ create table albums (album_id varchar2(100),
                      cover_photo_id varchar2(100) not null,
                      primary key (album_id),
                      foreign key (album_owner_id) references users
-                     on delete cascade
+                     on delete cascade,
                      check (album_visibility = 'EVERYONE' 
                       OR album_visibility = 'FRIENDS_OF_FRIENDS'
                       OR album_visibility = 'FRIENDS'
@@ -175,6 +179,7 @@ begin
 end;
 /                    
 
+/*
 -- Trigger for album_visibility
 create or replace trigger alb_vis
 before insert on albums
@@ -190,21 +195,4 @@ RAISE_APPLICATION_ERROR(-20001, 'Insertion Failed');
 end if;
 end;
 /
-
-/*
--- Trigger for album_visibility
-create or replace trigger alb_vis
-before insert on albums
-for each row 
-when (new.album_visibility = 'EVERYONE' 
-      or new.album_visibility = 'FRIENDS_OF_FRIENDS'
-      or new.album_visibility = 'FRIENDS'
-      or new.album_visibility = 'MYSELF'
-      or new.album_visibility = 'CUSTOM')
-begin
-insert into albums(album_id,album_owner_id,album_name,album_link,album_visibility,cover_photo_id) 
-  values(:new.album_id,:new.album_owner_id,:new.album_name,:new.album_link,:new.album_visibility,:new.cover_photo_id);
-end;
-/
 */
-
