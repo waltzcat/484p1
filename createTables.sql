@@ -170,6 +170,22 @@ begin
 end;
 /                    
 
+-- Trigger for album_visibility
+create or replace trigger alb_vis
+before insert on albums
+for each row 
+begin
+if :new.album_visibility <> 'EVERYONE' 
+AND :new.album_visibility <> 'FRIENDS_OF_FRIENDS'
+AND :new.album_visibility <> 'FRIENDS'
+AND :new.album_visibility <> 'MYSELF'
+AND :new.album_visibility <> 'CUSTOM' 
+then 
+RAISE_APPLICATION_ERROR(-20001, 'Insertion Failed');
+end if;
+end;
+/
+
 /*
 -- Trigger for album_visibility
 create or replace trigger alb_vis
@@ -186,3 +202,4 @@ insert into albums(album_id,album_owner_id,album_name,album_link,album_visibilit
 end;
 /
 */
+
