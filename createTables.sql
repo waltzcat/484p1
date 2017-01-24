@@ -90,7 +90,7 @@ create table user_events (event_id number,
 
 create table participants (event_id number,
                            user_id number,
-                           confirmation varchar2(100) not null,
+                           confirmation varchar2(100),
                            primary key (event_id,user_id),
                            foreign key (event_id) references user_events (event_id)
                            on delete cascade,
