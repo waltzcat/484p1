@@ -26,7 +26,7 @@ create table cities (city_id integer,
 
 create table user_current_city (user_id number,
                                 current_city_id integer not null,
-                                primary key (user_id, current_city_id),
+                                primary key (user_id),
                                 foreign key (user_id) references users (user_id)
                                 on delete cascade,
                                 foreign key (current_city_id) references cities(city_id)
@@ -36,7 +36,7 @@ create table user_current_city (user_id number,
 
 create table user_hometown_city (user_id number,
                                  hometown_city_id integer not null,
-                                 primary key (user_id, hometown_city_id),
+                                 primary key (user_id),
                                  foreign key (user_id) references users (user_id)
                                  on delete cascade,
                                  foreign key (hometown_city_id) references cities(city_id)
@@ -97,10 +97,10 @@ create table participants (event_id number,
 --                           on update cascade,
                            foreign key (user_id) references users (user_id)
                            on delete cascade,
-                           check (confirmation = 'ATTENDING'
-                           OR confirmation = 'DECLINED' 
-                           OR confirmation = 'UNSURE' 
-                           OR confirmation = 'NOT-REPLIED'));
+                           check (confirmation = 'attending'
+                           OR confirmation = 'declined' 
+                           OR confirmation = 'unsure' 
+                           OR confirmation = 'not-replied'));
 
 create table albums (album_id varchar2(100),
                      album_owner_id number not null,
