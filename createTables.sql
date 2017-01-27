@@ -88,9 +88,9 @@ create table user_events (event_id number,
                           foreign key (event_city_id) references cities(city_id)
                           on delete cascade);
 
-create table participants (event_id number,
-                           user_id number,
-                           confirmation varchar2(100),
+create table participants (event_id number not null,
+                           user_id number not null,
+                           confirmation varchar2(100) not null,
                            primary key (event_id,user_id),
                            foreign key (event_id) references user_events (event_id)
                            on delete cascade,
